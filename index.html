@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>Моё письмо</title>
+
+    <link rel="stylesheet" href="index.css">
+</head>
+<body>
+
+<section class="profile">
+    <h1>Моя анкета</h1>
+    <form action="#" id="profile" class="form">
+        <p class="form__success-msg">Форма заполнена правильно</p>
+        <p class="form__error-msg">Форма содержит ошибки</p>
+
+        <label for="profile-name" >Имя <span class="required">*</span></label>
+        <input
+                name="name"
+                id="profile-name"
+                placeholder="Моё имя"
+                data-required
+                data-validator="letters"
+        />
+        <span class="form__comment">Только буквы (русские или английские)</span>
+
+        <label for="profile-age">Возраст</label>
+        <input
+                name="age"
+                id="profile-age"
+                placeholder="Мой возраст"
+                data-validator="number"
+                data-validator-min="0"
+                data-validator-max="100"
+        />
+        <span class="form__comment">Число от 0 до 100</span>
+
+        <label for="profile-phone">Телефон</label>
+        <input
+                name="phone"
+                id="profile-phone"
+                placeholder="Мой телефон"
+                data-validator="regexp"
+                data-validator-pattern="^\+7\d{10}$"
+        />
+        <span class="form__comment">В формате +71234567890</span>
+
+        <label for="profile-number">Любимое число</label>
+        <input
+                name="number"
+                id="profile-number"
+                placeholder="42?"
+                data-validator="number"
+        />
+
+        <button>Сохранить</button>
+    </form>
+</section>
+
+<script src="./script.js"></script>
+<script>
+    // Вызов валидатора формы
+    validateForm({
+        formId: 'profile',
+        formValidClass: 'form_valid',
+        formInvalidClass: 'form_invalid',
+
+        inputErrorClass: 'input_error'
+    });
+</script>
+</body>
+</html>
