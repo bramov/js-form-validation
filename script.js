@@ -46,14 +46,19 @@ function validateForm(obj) {
     function submitFields(e){
         e.preventDefault();
         const isEmpty = elem => elem.value.length == 0;
-        const isValid = elem => !elem.classList.contains(obj.inputErrorClass);
         const form = document.getElementById(obj.formId);
+
+        //проверяем только те элементы, которые имеют мета-атрибут 'data-required'
         if (inputs.some(isEmpty)){
-            inputs.forEach(el => validateInput.call(el));
+            inputs.forEach(el => {
+                if (el.dataset.hasOwnProperty('required')) validateInput.call(el);
+            });
         };
-        console.log(inputs.some(isValid));
-        form.classList.toggle(obj.formValidClass, inputs.some(isValid));
-        form.classList.toggle(obj.formInvalidClass, !inputs.some(isValid));
+        const isNotValid = elem => elem.classList.contains(obj.inputErrorClass);
+
+        //если хотя бы один из инпутов красный, то форма заполнена неправильно.
+        form.classList.toggle(obj.formValidClass, !inputs.some(isNotValid));
+        form.classList.toggle(obj.formInvalidClass, inputs.some(isNotValid));
 
     }
 
