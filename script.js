@@ -2,22 +2,23 @@
 
 // Код валидации формы
 function validateForm(obj) {
-    let inputs = Array.from(document.querySelectorAll('input'));
+    const inputs = Array.from(document.querySelectorAll('input'));
     inputs.forEach((el => {
         el.addEventListener('blur', validateInput, true);
         el.addEventListener('focus', removeError, true)
     }));
-    let submitBtn = document.querySelector('button');
+    const submitBtn = document.querySelector('button');
     submitBtn.addEventListener('click', submitFields);
-    let form = document.getElementById(obj.formId);
+    const form = document.getElementById(obj.formId);
 
-
+    //убираем класс ошибки при фокусе на инпут
     function removeError(){
         if (this.classList.contains(obj.inputErrorClass)){
             this.classList.remove(obj.inputErrorClass);
         }
     }
-    //функцию ниже можно заменить на classList.toggle(obj.inputErrorClass, условие)
+
+    //проверяем инпут и вешаем/убираем класс ошибки
     function validateInput() {
         switch (this.getAttribute('data-validator')){
             case 'letters':
@@ -26,7 +27,10 @@ function validateForm(obj) {
             case 'number':
                 if (this.getAttribute('data-validator-min') &&
                     this.getAttribute('data-validator-max')){
-                     this.classList.toggle(obj.inputErrorClass, (Number(this.value) < this.getAttribute('data-validator-min') ||
+                     //в качестве второго аргумента в функцию передаем условия
+                     //первым условие проверяем неравенство длины строки нулю, так как Number('') == 0
+                     this.classList.toggle(obj.inputErrorClass, (this.value.length == 0 || isNaN(this.value) ||
+                                                                 Number(this.value) < this.getAttribute('data-validator-min') ||
                                                                  Number(this.value) > this.getAttribute('data-validator-max')));
                 } else {
                     this.classList.toggle(obj.inputErrorClass, !this.value.match(/^\d+$/g));
@@ -38,16 +42,21 @@ function validateForm(obj) {
         }
     }
 
+    //проверяем все инпуты по нажатию на кнопку
     function submitFields(e){
         e.preventDefault();
-        const checkInputs = elem => elem.classList.contains(obj.inputErrorClass);
-        const checkEmpty = elem => elem.value.length == 0;
+        const isEmpty = elem => elem.value.length == 0;
+        const isValid = elem => !elem.classList.contains(obj.inputErrorClass);
         let form = document.getElementById(obj.formId);
-        let condition1 = inputs.some(checkInputs) || inputs.some(checkEmpty);
-        form.classList.toggle(obj.formInvalidClass, condition1);
-
-
-
+        if (inputs.some(isEmpty)){
+            inputs.forEach(el => validateInput.call(el));
+        };
+        console.log(inputs.some(isValid));
+        if (inputs.some(isValid) && !inputs.some(isEmpty)){
+            form.classList.add(obj.formValidClass);
+        } else {
+            form.classList.add(obj.formInvalidClass);
+        }
     }
 
 
