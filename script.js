@@ -9,7 +9,7 @@ function validateForm(obj) {
     }));
     const submitBtn = document.querySelector('button');
     submitBtn.addEventListener('click', submitFields);
-    const form = document.getElementById(obj.formId);
+    //const form = document.getElementById(obj.formId);
 
     //убираем класс ошибки при фокусе на инпут
     function removeError(){
@@ -28,7 +28,7 @@ function validateForm(obj) {
                 if (this.getAttribute('data-validator-min') &&
                     this.getAttribute('data-validator-max')){
                      //в качестве второго аргумента в функцию передаем условия
-                     //первым условие проверяем неравенство длины строки нулю, так как Number('') == 0
+                     //первым условием проверяем неравенство длины строки нулю, так как Number('') == 0
                      this.classList.toggle(obj.inputErrorClass, (this.value.length == 0 || isNaN(this.value) ||
                                                                  Number(this.value) < this.getAttribute('data-validator-min') ||
                                                                  Number(this.value) > this.getAttribute('data-validator-max')));
@@ -47,16 +47,14 @@ function validateForm(obj) {
         e.preventDefault();
         const isEmpty = elem => elem.value.length == 0;
         const isValid = elem => !elem.classList.contains(obj.inputErrorClass);
-        let form = document.getElementById(obj.formId);
+        const form = document.getElementById(obj.formId);
         if (inputs.some(isEmpty)){
             inputs.forEach(el => validateInput.call(el));
         };
         console.log(inputs.some(isValid));
-        if (inputs.some(isValid) && !inputs.some(isEmpty)){
-            form.classList.add(obj.formValidClass);
-        } else {
-            form.classList.add(obj.formInvalidClass);
-        }
+        form.classList.toggle(obj.formValidClass, inputs.some(isValid));
+        form.classList.toggle(obj.formInvalidClass, !inputs.some(isValid));
+
     }
 
 
